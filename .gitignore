@@ -46,6 +46,7 @@ logs/
 *.tmp
 *.temp
 .cache/
+tmp/
 
 # Testing
 coverage/

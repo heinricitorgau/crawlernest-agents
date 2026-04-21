@@ -42,3 +42,9 @@ Run:
 ```
 
 before opening a PR.
+
+For local workflow safety, also install the repository hook:
+
+```bash
+./scripts/install-hooks.sh
+```
