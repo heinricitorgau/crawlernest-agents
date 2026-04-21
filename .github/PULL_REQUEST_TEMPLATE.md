@@ -1,17 +1,14 @@
-## What does this PR do?
+## Summary
 
-<!-- Brief description of the change -->
+<!-- What changed and why? -->
 
-## Agent Information (if adding/modifying an agent)
+## CrawlerNest Relevance
 
-- **Agent Name**:
-- **Category**:
-- **Specialty**:
+<!-- Which real workflow or maintenance need does this support? -->
 
 ## Checklist
 
-- [ ] Follows the agent template structure from CONTRIBUTING.md
-- [ ] Includes YAML frontmatter with `name`, `description`, `color`
-- [ ] Has concrete code/template examples (for new agents)
-- [ ] Tested in real scenarios
-- [ ] Proofread and formatted correctly
+- [ ] The change is directly relevant to CrawlerNest development
+- [ ] I did not add broad generic-role sprawl
+- [ ] `./scripts/lint-agents.sh` passes if agent files changed
+- [ ] Documentation stays aligned with the new structure
