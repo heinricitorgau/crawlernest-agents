@@ -3,6 +3,11 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from prompt_utils import load_memory_bundle, read_optional_text
+
+
+PIPELINE_CONTEXT = "crawler -> extractor -> normalization -> db_writer -> analytics -> recommendation"
+
 
 def detect_log_signals(content: str) -> list[str]:
     lowered = content.lower()
@@ -30,6 +35,7 @@ def main() -> int:
         print("Usage: python3 scripts/generate-pipeline-analysis.py <log_path> <output_path>")
         return 1
 
+    repo_root = Path(__file__).resolve().parents[1]
     log_path = Path(sys.argv[1])
     output_path = Path(sys.argv[2])
 
@@ -38,28 +44,55 @@ def main() -> int:
         return 1
 
     content = log_path.read_text(encoding="utf-8", errors="replace")
+    heuristics = read_optional_text(repo_root / "docs/OPERATIONAL_HEURISTICS.md")
+    memory = load_memory_bundle(repo_root)
     signals = detect_log_signals(content)
     signal_lines = "\n".join(f"- {signal}" for signal in signals)
 
-    prompt = f"""# Pipeline Analysis Prompt
+    prompt = f"""# CrawlerNest Pipeline Analysis Prompt
+
+## Role
+
 Use:
-1. `crawlernest-debug-reliability-engineer` for root cause
-2. `crawlernest-data-pipeline-engineer` for structural improvements
+1. crawlernest-debug-reliability-engineer
+2. crawlernest-data-pipeline-engineer
 
-Task:
-Analyze this pipeline log.
+## Pipeline Context
 
-Focus on:
-- where the pipeline failed or degraded
-- whether fallback behavior triggered correctly
-- whether data loss risk exists
-- whether checkpoint or deferred processing is coherent
-- whether the issue is operational or architectural
+{PIPELINE_CONTEXT}
 
 Detected signals:
 {signal_lines}
 
+## Operational Heuristics
+
+{heuristics}
+
+## Memory Context
+
+{memory}
+
+## Task
+
+Analyze this pipeline log.
+
+## Required Analysis
+
+1. Locate the failure stage.
+2. Check whether it matches known heuristics.
+3. Decide whether the issue is:
+   - extractor issue
+   - normalization issue
+   - db_writer integrity issue
+   - orchestration issue
+   - analytics issue
+   - recommendation issue
+   - upstream source change
+4. Suggest minimal next action.
+5. Identify whether memory should be updated.
+
 ## Pipeline Log
+
 ```text
 {content}
 ```

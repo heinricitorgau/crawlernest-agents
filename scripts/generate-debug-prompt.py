@@ -3,6 +3,13 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from prompt_utils import load_memory_bundle, read_optional_text
+
+
+REPOSITORY_CONTEXT = """CrawlerNest is a structured data infrastructure system for university intelligence.
+Core pipeline: crawler -> extractor -> normalization -> db_writer -> analytics -> recommendation.
+Current state: evolving MVP; data correctness and operational evidence matter more than architecture elegance."""
+
 
 def summarize_failure_kind(content: str) -> list[str]:
     lowered = content.lower()
@@ -30,6 +37,7 @@ def main() -> int:
         print("Usage: python3 scripts/generate-debug-prompt.py <log_path> <output_path>")
         return 1
 
+    repo_root = Path(__file__).resolve().parents[1]
     log_path = Path(sys.argv[1])
     output_path = Path(sys.argv[2])
 
@@ -38,28 +46,52 @@ def main() -> int:
         return 1
 
     content = log_path.read_text(encoding="utf-8", errors="replace")
+    heuristics = read_optional_text(repo_root / "docs/OPERATIONAL_HEURISTICS.md")
+    memory = load_memory_bundle(repo_root)
     hints = summarize_failure_kind(content)
     hint_lines = "\n".join(f"- {hint}" for hint in hints)
 
-    prompt = f"""# Debug Prompt
-Use the `crawlernest-debug-reliability-engineer` role.
+    prompt = f"""# CrawlerNest Debug Prompt
 
-Task:
-Analyze this failed test run.
+## Role
 
-Goals:
-1. Identify the observed behavior
-2. Infer the likely reproduction path
-3. Find the root cause
-4. Suggest the minimal safe fix
-5. State whether the failure is likely due to:
+Use crawlernest-debug-reliability-engineer.
+
+## Repository Context
+
+{REPOSITORY_CONTEXT}
+
+Detected failure hints:
 {hint_lines}
 
-Constraints:
+## Operational Heuristics
+
+{heuristics}
+
+## Memory Context
+
+{memory}
+
+## Task
+
+Analyze this failed test run.
+
+## Required Reasoning Order
+
+1. Check whether the failure matches any operational heuristic.
+2. Identify the most likely failure stage.
+3. Explain evidence from the log.
+4. Suggest the smallest safe next step.
+5. Say what should NOT be debugged first.
+
+## Constraints
+
 - Do not guess without citing evidence from the log
 - Prefer the smallest grounded explanation first
+- Do not auto-fix code
 
 ## Test Output
+
 ```text
 {content}
 ```

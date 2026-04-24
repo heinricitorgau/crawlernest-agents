@@ -136,6 +136,35 @@ Prevent divergence between implementation and documentation.
 
 ---
 
+## Operational Heuristics Injection
+
+Automation-generated prompts automatically include:
+
+- `docs/OPERATIONAL_HEURISTICS.md`
+
+This ensures debug and pipeline analysis follow the same decision rules.
+
+The heuristics do not make decisions automatically.
+They only guide the generated prompt.
+
+---
+
+## Memory Injection
+
+Automation-generated prompts include:
+
+- `docs/OPERATIONAL_HEURISTICS.md`
+- `memory/known-issues.md`
+- `memory/pipeline-pitfalls.md`
+- `memory/extractor-edge-cases.md`
+- `memory/db-decisions.md`
+
+Memory is truncated to avoid prompt overflow.
+
+Memory is used to guide reasoning, not to override log evidence.
+
+---
+
 ## 📁 Directory Structure
 
 ```text
@@ -239,4 +268,3 @@ This automation system transforms:
 It is intentionally simple and focused.
 
 It exists to support a single engineer building a complex system — not to simulate a team.
-
