@@ -1,5 +1,7 @@
 # CrawlerNest AI Dev System
 
+[![Lint Agent Files](https://github.com/heinricitorgau/crawlernest-agents/actions/workflows/lint-agents.yml/badge.svg)](https://github.com/heinricitorgau/crawlernest-agents/actions/workflows/lint-agents.yml)
+
 > A focused, repo-native agent collection for AI-assisted CrawlerNest development.
 
 This repository is a trimmed-down fork of a much larger general-purpose agent collection. It is now a small, maintainable system aimed at one real use case: helping a solo builder ship and maintain **CrawlerNest**.
@@ -136,6 +138,7 @@ Focused AI-assisted development system for CrawlerNest, with a small set of engi
 
 ## Supporting Docs
 
+- Local LLM (ds4) integration in the CrawlerNest platform: [DS4_LOCAL_MODEL.md](https://github.com/heinricitorgau/University-Data-Infrastructure-Web-Platform/blob/main/docs/DS4_LOCAL_MODEL.md) — how the platform's web-agent generates recommendation, ranking, lookup, and data-query explanations with a local or remote ds4 model (honesty contract, env config, tests)
 - Agent routing guide: [AGENT_SELECTION.md](AGENT_SELECTION.md)
 - Daily development workflow: [DEV_PLAYBOOK.md](DEV_PLAYBOOK.md)
 - Prompt templates: [AGENT_PROMPT_LIBRARY.md](AGENT_PROMPT_LIBRARY.md)
